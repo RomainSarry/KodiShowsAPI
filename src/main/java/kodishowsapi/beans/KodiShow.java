@@ -2,18 +2,18 @@ package kodishowsapi.beans;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Romain on 05/11/2017.
  */
 public class KodiShow {
-    String id;
+    private String id;
 
-    String title;
+    private String title;
 
-    Map<Integer, KodiSeason> seasons;
+    private Map<Integer, KodiSeason> seasons;
 
     public KodiShow(ResultSet rs) {
         try {
@@ -46,5 +46,37 @@ public class KodiShow {
 
     public void setSeasons(Map<Integer, KodiSeason> seasons) {
         this.seasons = seasons;
+    }
+    
+    public KodiSeason getSeason(Integer number) {
+    	if (seasons == null) {
+    		return null;
+    	}
+    	return seasons.get(number);
+    }
+    
+    public void putSeason(Integer number, KodiSeason season) {
+    	if (this.seasons == null) {
+    		seasons = new HashMap<Integer, KodiSeason>();
+    	}
+    	this.seasons.put(number, season);
+    }
+    
+    public Integer getNumberOfUnwatchedEpisodes() {
+    	Integer numberOfEpisodes = 0;
+    	
+    	for (Map.Entry<Integer, KodiSeason> seasonEntry : this.seasons.entrySet()) {
+    		for (Map.Entry<Integer, KodiEpisode> episodeEntry : seasonEntry.getValue().getEpisodes().entrySet()) {
+    			if (!episodeEntry.getValue().isWatched()) {
+    				numberOfEpisodes++;
+    			}
+    		}
+    	}
+    	
+    	return numberOfEpisodes;
+    }
+    
+    public Boolean hasEpisode(Integer season, Integer episode) {
+    	return getSeason(season) != null && getSeason(season).getEpisode(episode) != null;
     }
 }

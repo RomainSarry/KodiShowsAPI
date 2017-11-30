@@ -1,5 +1,6 @@
 package kodishowsapi.services;
 
+import kodishowsapi.beans.KodiEpisode;
 import kodishowsapi.beans.KodiSeason;
 import kodishowsapi.beans.KodiShow;
 
@@ -50,20 +51,30 @@ public class KodiAPI {
             System.err.println(e);
         }
     }
+    
+    public KodiShow getShowAndDetailsByTitle(String title) {
+    	KodiShow show = getShowByTitle(title);
+    	
+    	for (Map.Entry<Integer, KodiSeason> seasonEntry : getSeasons(show.getId()).entrySet()) {
+    		KodiSeason season = seasonEntry.getValue();
+    		season.setEpisodes(getEpisodes(season.getId()));
+    		show.putSeason(seasonEntry.getKey(), season);
+    	}
+    	
+    	return show;
+    }
 
-    public KodiShow getShowByTitle(String title) {
+    private KodiShow getShowByTitle(String title) {
         try {
             ResultSet resultSet = statement.executeQuery("select * from tvshow where c00  LIKE '%" + title + "%'");
-            KodiShow show = new KodiShow(resultSet);
-            show.setSeasons(getSeasons(show.getId()));
-            return show;
+            return new KodiShow(resultSet);
         } catch (SQLException e) {
             System.err.println(e);
             return null;
         }
     }
 
-    public Map<Integer, KodiSeason> getSeasons(String showId) {
+    private Map<Integer, KodiSeason> getSeasons(String showId) {
         try {
             ResultSet resultSet = statement.executeQuery("select * from seasons where idShow = " + showId);
             Map<Integer, KodiSeason> seasons = new HashMap<Integer, KodiSeason>();
@@ -72,10 +83,28 @@ public class KodiAPI {
                 KodiSeason season = new KodiSeason(resultSet);
                 seasons.put(resultSet.getInt("season"), season);
             }
+            
             return seasons;
         } catch (SQLException e) {
             System.err.println(e);
             return null;
         }
+    }
+    
+    private Map<Integer, KodiEpisode> getEpisodes(String seasonId) {
+    	try {
+    		ResultSet resultSet = statement.executeQuery("select * from episode where idSeason = " + seasonId);
+    		Map<Integer, KodiEpisode> episodes = new HashMap<Integer, KodiEpisode>();
+    		
+    		while(resultSet.next()) {
+    			KodiEpisode episode = new KodiEpisode(resultSet);
+    			episodes.put(resultSet.getInt("c13"), episode);
+    		}
+    			
+    		return episodes;
+    	} catch (SQLException e) {
+            System.err.println(e);
+            return null;
+    	}
     }
 }
