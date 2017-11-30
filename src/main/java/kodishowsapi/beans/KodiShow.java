@@ -64,14 +64,19 @@ public class KodiShow {
     
     public Integer getNumberOfUnwatchedEpisodes() {
     	Integer numberOfEpisodes = 0;
-    	
-    	for (Map.Entry<Integer, KodiSeason> seasonEntry : this.seasons.entrySet()) {
-    		for (Map.Entry<Integer, KodiEpisode> episodeEntry : seasonEntry.getValue().getEpisodes().entrySet()) {
-    			if (!episodeEntry.getValue().isWatched()) {
-    				numberOfEpisodes++;
-    			}
-    		}
-    	}
+
+    	if (seasons != null && !seasons.isEmpty()) {
+            for (Map.Entry<Integer, KodiSeason> seasonEntry : seasons.entrySet()) {
+                Map<Integer, KodiEpisode> episodeMap = seasonEntry.getValue().getEpisodes();
+                if (episodeMap != null && !episodeMap.isEmpty()) {
+                    for (Map.Entry<Integer, KodiEpisode> episodeEntry : seasonEntry.getValue().getEpisodes().entrySet()) {
+                        if (!episodeEntry.getValue().isWatched()) {
+                            numberOfEpisodes++;
+                        }
+                    }
+                }
+            }
+        }
     	
     	return numberOfEpisodes;
     }
