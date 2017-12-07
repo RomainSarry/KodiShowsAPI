@@ -71,7 +71,7 @@ public class KodiAPI {
 
     public KodiShow getShowByTitle(String title) {
         try {
-            ResultSet resultSet = statement.executeQuery("select * from tvshow where c00  LIKE '%" + title.replace("'", "''") + "%'");
+            ResultSet resultSet = statement.executeQuery("select * from tvshow where c00  = '" + title.replace("'", "''") + "'");
             return new KodiShow(resultSet);
         } catch (SQLException e) {
             System.err.println(e);
