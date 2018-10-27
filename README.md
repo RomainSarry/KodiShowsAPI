@@ -6,6 +6,6 @@ Java API for the Kodi application
 <dependency>
     <groupId>com.sarryromain</groupId>
     <artifactId>kodishows-api</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 </dependency>
 ```
