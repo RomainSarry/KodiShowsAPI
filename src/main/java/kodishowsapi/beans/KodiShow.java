@@ -15,13 +15,9 @@ public class KodiShow {
 
     private Map<Integer, KodiSeason> seasons;
 
-    public KodiShow(ResultSet rs) {
-        try {
-            title = rs.getString("c00");
-            id = rs.getString("idShow");
-        } catch (SQLException e) {
-            System.err.println(e);
-        }
+    public KodiShow(ResultSet rs) throws SQLException {
+        title = rs.getString("c00");
+        id = rs.getString("idShow");
     }
 
     public String getId() {
