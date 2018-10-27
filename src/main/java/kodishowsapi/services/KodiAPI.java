@@ -4,9 +4,6 @@ import kodishowsapi.beans.KodiEpisode;
 import kodishowsapi.beans.KodiSeason;
 import kodishowsapi.beans.KodiShow;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,13 +12,15 @@ import java.util.Map;
  * Created by Romain on 05/11/2017.
  */
 public class KodiAPI {
-    public static final String FILE_LOCATION = "jdbc:sqlite:C:\\Users\\Romain\\AppData\\Roaming\\Kodi\\userdata\\Database\\MyVideos107.db";
+
+    private String databasePath;
 
     private Connection connection;
 
     private Statement statement;
 
-    public KodiAPI() {
+    public KodiAPI(String databasePath) {
+        this.databasePath = databasePath;
         openConnection();
     }
 
@@ -29,12 +28,10 @@ public class KodiAPI {
         connection = null;
 
         try {
-            Class.forName("org.sqlite.JDBC").newInstance();
-            Context initCtx = new InitialContext();
-            Context envCtx = (Context) initCtx.lookup("java:comp/env");
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/sqlite");
 
-            connection = ds.getConnection();
+            Class.forName("org.sqlite.JDBC").newInstance();
+            connection = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+
             statement = connection.createStatement();
             statement.setQueryTimeout(30);
         } catch (Exception e) {
