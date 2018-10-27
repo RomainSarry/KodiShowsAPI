@@ -12,12 +12,8 @@ public class KodiSeason {
     
     private Map<Integer, KodiEpisode> episodes;
 
-    public KodiSeason(ResultSet rs) {
-        try {
-            id = rs.getString("idSeason");
-        } catch (SQLException e) {
-            System.err.println(e);
-        }
+    public KodiSeason(ResultSet rs) throws SQLException {
+		id = rs.getString("idSeason");
     }
 
 	public String getId() {

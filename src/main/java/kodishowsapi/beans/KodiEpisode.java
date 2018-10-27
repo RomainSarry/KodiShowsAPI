@@ -6,20 +6,19 @@ import java.sql.SQLException;
 public class KodiEpisode {
 	private String id;
 
+	private Integer number;
+
 	private String idFile;
 	
 	private String title;
 	
 	private Boolean watched;
 
-    public KodiEpisode(ResultSet rs) {
-        try {
-            id = rs.getString("idEpisode");
-            idFile = rs.getString("idFile");
-            title = rs.getString("c00");
-        } catch (SQLException e) {
-            System.err.println(e);
-        }
+    public KodiEpisode(ResultSet rs) throws SQLException {
+		id = rs.getString("idEpisode");
+		number = Integer.valueOf(rs.getString("c13"));
+		idFile = rs.getString("idFile");
+		title = rs.getString("c00");
     }
 
 	public String getId() {
@@ -30,7 +29,15 @@ public class KodiEpisode {
 		this.id = id;
 	}
 
-    public String getIdFile() {
+	public Integer getNumber() {
+		return number;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
+	}
+
+	public String getIdFile() {
         return idFile;
     }
 
