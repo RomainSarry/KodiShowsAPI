@@ -7,4 +7,7 @@ public class KodiShowFetchingException extends KodiShowsAPIException {
     public KodiShowFetchingException(String showName) {
         super("Show not found : " + showName);
     }
+    public KodiShowFetchingException() {
+        super("Shows not found");
+    }
 }

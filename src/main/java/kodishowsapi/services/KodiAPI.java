@@ -9,7 +9,9 @@ import kodishowsapi.exceptions.KodiEpisodesFetchingException;
 import kodishowsapi.exceptions.KodiShowFetchingException;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,6 +52,23 @@ public class KodiAPI {
                 throw new KodiDatabaseDisconnectionException(databasePath);
             }
         }
+    }
+
+    public List<KodiShow> getShows() throws KodiShowFetchingException, KodiEpisodesFetchingException {
+        List<KodiShow> shows = new ArrayList<>();
+
+        try {
+            ResultSet rs = statement.executeQuery("select * from tvshow");
+            while (rs.next()) {
+                KodiShow show = new KodiShow(rs);
+                show.setSeasons(getSeasons(show));
+                shows.add(show);
+            }
+        } catch (SQLException e) {
+            throw new KodiShowFetchingException();
+        }
+
+        return shows;
     }
     
     public KodiShow getShow(String title) throws KodiShowFetchingException, KodiEpisodesFetchingException {
